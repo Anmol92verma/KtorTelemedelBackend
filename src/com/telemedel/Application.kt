@@ -1,8 +1,8 @@
 package com.telemedel
 
-import com.telemedel.com.telemedel.routes.users.getUser
-import com.telemedel.backend.mongo.MongoDataService
-import com.telemedel.mongo.TMMongoClient
+import com.telemedel.routes.users.getUser
+import com.telemedel.data.mongo.MongoDataService
+import com.telemedel.data.mongo.TMMongoClient
 import io.ktor.application.*
 import io.ktor.response.*
 import io.ktor.routing.*

@@ -1,4 +1,4 @@
-package com.telemedel.mongo
+package com.telemedel.data.mongo
 
 import com.mongodb.MongoClient
 

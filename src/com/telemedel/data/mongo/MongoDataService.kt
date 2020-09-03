@@ -1,4 +1,4 @@
-package com.telemedel.backend.mongo
+package com.telemedel.data.mongo
 
 import com.mongodb.MongoClient
 import org.bson.Document

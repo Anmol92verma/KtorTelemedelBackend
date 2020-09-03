@@ -1,6 +1,6 @@
-package com.telemedel.com.telemedel.routes.users
+package com.telemedel.routes.users
 
-import com.telemedel.backend.mongo.MongoDataService
+import com.telemedel.data.mongo.MongoDataService
 import io.ktor.application.*
 import io.ktor.http.*
 import io.ktor.response.*
