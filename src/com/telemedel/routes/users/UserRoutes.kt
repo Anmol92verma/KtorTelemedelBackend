@@ -18,7 +18,7 @@ fun Route.getUser() {
         print("got the /user/id")
         val userid = call.parameters["id"]
         val document = userCollection().findOneById(ObjectId(userid))
-        call.respond(HttpStatusCode.OK, "woo hooo $userid $document")
+        document?.let { it1 -> call.respond(HttpStatusCode.OK, it1) }
     }
 
     post {
