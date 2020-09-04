@@ -1,19 +1,36 @@
 package com.telemedel.routes.users
 
-import com.telemedel.data.mongo.MongoDataService
+import com.telemedel.data.TMMongoDBClient
+import com.telemedel.data.models.User
 import io.ktor.application.*
 import io.ktor.http.*
+import io.ktor.request.*
 import io.ktor.response.*
 import io.ktor.routing.*
+import org.bson.types.ObjectId
+import org.litote.kmongo.*
+import org.litote.kmongo.findOneById
 
-const val COLL_USERS: String = "USERS"
+const val TELEMEDEL: String = "telemedel"
 
-fun Route.getUser(mongoDataService: MongoDataService) {
+fun Route.getUser() {
     get("/{id?}") {
         print("got the /user/id")
         val userid = call.parameters["id"]
-        print("got the /user/$userid")
-        userid?.let { it1 -> mongoDataService.documentFromCollection(it1, COLL_USERS) }
-        call.respond(HttpStatusCode.OK, "woo hooo $userid")
+        val document = userCollection().findOneById(ObjectId(userid))
+        call.respond(HttpStatusCode.OK, "woo hooo $userid $document")
+    }
+
+    post {
+        val userCreateParams = call.receive<User>()
+        val document = userCollection().findOne(User::email eq userCreateParams.email)
+        if (document == null) {
+            val result = userCollection().insertOne(userCreateParams)
+            call.respond(HttpStatusCode.OK, "saved user $result")
+        } else {
+            call.respond(HttpStatusCode.Conflict, "already exist")
+        }
     }
 }
+
+private fun userCollection() = TMMongoDBClient.getCollection<User>()

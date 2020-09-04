@@ -1,8 +1,6 @@
 package com.telemedel
 
 import com.telemedel.routes.users.getUser
-import com.telemedel.data.mongo.MongoDataService
-import com.telemedel.data.mongo.TMMongoClient
 import io.ktor.application.*
 import io.ktor.response.*
 import io.ktor.routing.*
@@ -14,13 +12,10 @@ import io.ktor.http.content.*
 import io.ktor.features.*
 import io.ktor.auth.*
 import io.ktor.gson.*
+import org.litote.kmongo.KMongo
 
 fun main(args: Array<String>): Unit = io.ktor.server.netty.EngineMain.main(args)
 
-private val mongoDataService = MongoDataService(
-        TMMongoClient(),
-        "dev"
-)
 
 @Suppress("unused") // Referenced in application.conf
 @kotlin.jvm.JvmOverloads
@@ -48,11 +43,10 @@ fun Application.module(testing: Boolean = false) {
     routing {
 
         route("/user"){
-            getUser(mongoDataService)
+            getUser()
 
         }
         get("/") {
-            mongoDataService.allFromCollection("nothing")
             call.respondText("HELLO WORLD!", contentType = ContentType.Text.Plain)
         }
 
