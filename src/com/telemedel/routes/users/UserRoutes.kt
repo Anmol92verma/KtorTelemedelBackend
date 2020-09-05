@@ -26,7 +26,7 @@ fun Route.getUser() {
         val document = userCollection().findOne(User::email eq userCreateParams.email)
         if (document == null) {
             val result = userCollection().insertOne(userCreateParams)
-            call.respond(HttpStatusCode.OK, "saved user $result")
+            call.respond(HttpStatusCode.Created, "saved user $result")
         } else {
             call.respond(HttpStatusCode.Conflict, "already exist")
         }

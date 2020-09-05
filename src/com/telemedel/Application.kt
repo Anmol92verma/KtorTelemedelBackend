@@ -12,7 +12,6 @@ import io.ktor.http.content.*
 import io.ktor.features.*
 import io.ktor.auth.*
 import io.ktor.gson.*
-import org.litote.kmongo.KMongo
 
 fun main(args: Array<String>): Unit = io.ktor.server.netty.EngineMain.main(args)
 
@@ -20,29 +19,19 @@ fun main(args: Array<String>): Unit = io.ktor.server.netty.EngineMain.main(args)
 @Suppress("unused") // Referenced in application.conf
 @kotlin.jvm.JvmOverloads
 fun Application.module(testing: Boolean = false) {
-    install(CORS) {
-        method(HttpMethod.Options)
-        method(HttpMethod.Put)
-        method(HttpMethod.Get)
-        method(HttpMethod.Post)
-        method(HttpMethod.Delete)
-        method(HttpMethod.Patch)
-        header(HttpHeaders.Authorization)
-        allowCredentials = true
-        anyHost() // @TODO: Don't do this in production if possible. Try to limit it.
-    }
+    setupCors()
 
-    install(Authentication) {
-    }
+    setupAuthentication()
 
-    install(ContentNegotiation) {
-        gson {
-        }
-    }
+    setupContentNegotiation()
 
+    setupRouting()
+}
+
+private fun Application.setupRouting() {
     routing {
 
-        route("/user"){
+        route("/user") {
             getUser()
 
         }
@@ -95,6 +84,32 @@ fun Application.module(testing: Boolean = false) {
         get("/json/gson") {
             call.respond(mapOf("hello" to "world"))
         }
+    }
+}
+
+private fun Application.setupContentNegotiation() {
+    install(ContentNegotiation) {
+        gson {
+        }
+    }
+}
+
+private fun Application.setupAuthentication() {
+    install(Authentication) {
+    }
+}
+
+private fun Application.setupCors() {
+    install(CORS) {
+        method(HttpMethod.Options)
+        method(HttpMethod.Put)
+        method(HttpMethod.Get)
+        method(HttpMethod.Post)
+        method(HttpMethod.Delete)
+        method(HttpMethod.Patch)
+        header(HttpHeaders.Authorization)
+        allowCredentials = true
+        anyHost() // @TODO: Don't do this in production if possible. Try to limit it.
     }
 }
 
